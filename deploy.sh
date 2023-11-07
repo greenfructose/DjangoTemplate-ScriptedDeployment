@@ -70,18 +70,9 @@ fi
 
 echo 'All required packages have been installed!'
 
-# Setup git
-echo 'Setting up git...'
-git config --global user.name "$GIT_USER"
-git config --global user.email "$GIT_EMAIL"
 
-# Clone selected repository
-echo 'Cloning repository...'
-git clone https://github.com/$REPO_OWNER/$REPO_NAME.git
-cd $REPO_NAME
-
-GROUPNAME=$REPO_OWNER
-APPNAME=$REPO_NAME
+GROUPNAME=${PWD##*/}
+APPNAME=${PWD##*/}
 APPFOLDERPATH=/$GROUPNAME/$APPNAME
 
 # Create App Folder
