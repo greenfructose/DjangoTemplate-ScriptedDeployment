@@ -188,6 +188,8 @@ python ./deployment/scripts/render.py -i deployment/templates/django_settings -o
 echo "Running databse migrations..."
 ./manage.py makemigrations
 ./manage.py migrate
+# Collect static files
+./manage.py collectstatic
 # Create superuser
 echo "Creating superuser $ADMIN_USER..."
 DJANGO_SUPERUSER_USERNAME=$ADMIN_USER DJANGO_SUPERUSER_EMAIL=$ADMIN_EMAIL DJANGO_SUPERUSER_PASSWORD=$ADMIN_PASSWORD ./manage.py createsuperuser --noinput
