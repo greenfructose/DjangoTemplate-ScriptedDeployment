@@ -12,7 +12,7 @@ EMAIL_REGEX="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!
 while true; do
     read -p 'Enter username for superuser: ' ADMIN_USER
     echo
-    [ !-z "$ADMIN_USER" ] && break || echo "Username cannot be blank. Please try again."
+    [ ! -z "$ADMIN_USER" ] && break || echo "Username cannot be blank. Please try again."
 done
 
 while true; do
@@ -24,7 +24,7 @@ done
 while true; do
     read -s -p 'Enter password for superuser: ' ADMIN_PASSWORD
     echo
-    [ !-z "$ADMIN_PASSWORD"] && break || echo "Password can't be blank. Please try again."
+    [ ! -z "$ADMIN_PASSWORD"] && break || echo "Password can't be blank. Please try again."
 done
 
 while true; do
