@@ -18,7 +18,7 @@ done
 while true; do
     read -p 'Enter email for superuser: ' ADMIN_EMAIL
     echo
-    [ $ADMIN_EMAIL =~ $EMAIL_REGEX ] && break || echo 'Please enter a valid email address.' 
+    [[ $ADMIN_EMAIL =~ $EMAIL_REGEX ]] && break || echo 'Please enter a valid email address.' 
 done
 
 while true; do
