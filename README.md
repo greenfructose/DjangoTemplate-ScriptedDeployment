@@ -57,3 +57,17 @@ secret = django_secret
 hosts: localhost,127.0.0.1,0.0.0.0,host_obtained_by_script
 
 ```
+
+Make script executable
+
+```bash
+sudo chmod +x ./deploy.sh
+```
+
+Run script as root and answer all questions
+
+```bash
+sudo ./deploy.sh
+```
+
+Your site will be available on port 80 via all IP addresses on the host, secure access as needed.
