@@ -34,7 +34,7 @@ while true; do
 done
 
 # Set OS prerequisites
-LINUX_PREREQ=('git' 'build-essential' 'python3-dev' 'python3-pip' 'nginx' 'postgresql' 'libpq-dev' )
+LINUX_PREREQ=('build-essential' 'python3-dev' 'python3-pip' 'nginx' 'postgresql' 'libpq-dev' )
 
 # Set Python prerequisites
 PYTHON_PREREQ=('virtualenv')
