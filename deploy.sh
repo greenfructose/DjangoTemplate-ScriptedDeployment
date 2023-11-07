@@ -6,54 +6,37 @@ source ./func.sh
 # Check if running as root, exit if not
 check_root
 
-# Get Django project GitHub repository information
-echo 'Getting repo information...'
-read -p 'Enter GitHub repository owner: ' REPO_OWNER
-read -p 'Enter GitHub Repository name: ' REPO_NAME
-
-# Get git config information
-echo 'Getting git config info...'
-read -p 'Enter git user.name: ' GIT_USER
-read -p 'Enter git user.email: ' GIT_EMAIL
+EMAIL_REGEX="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
 
 # Get Django admin user info
-read -p 'Enter username for superuser: ' ADMIN_USER
-read -p 'Enter email for superuser: ' ADMIN_EMAIL
+while true; do
+    read -p 'Enter username for superuser: ' ADMIN_USER
+    echo
+    [[ !-z "$ADMIN_USER" ]] && break || echo "Username cannot be blank. Please try again."
+done
+
+while true; do
+    read -p 'Enter email for superuser: ' ADMIN_EMAIL
+    echo
+    [[ $ADMIN_EMAIL =~ $EMAIL_REGEX ]] && break || echo 'Please enter a valid email address.' 
+done
+
 while true; do
     read -s -p 'Enter password for superuser: ' ADMIN_PASSWORD
     echo
-    read -s -p 'Enter password again: ' ADMIN_PASSWORD_CONF
-    echo
-    [ "$ADMIN_PASSWORD" = "$ADMIN_PASSWORD_CONF" ] && break
-    echo "Passwords don't match, try again"
+    [[ !-z "$ADMIN_PASSWORD"]] && break || echo "Password can't be blank. Please try again."
 done
 
-# Validate that inputs are not blank
-if [ -z "$GIT_USER" ] || [ -z "$GIT_EMAIL" ] || [ -z "$REPO_OWNER" ] || [ -z "$REPO_NAME" ] || [ -z "$ADMIN_USER" ] || [ -z "$ADMIN_EMAIL" ] || [ -z "$ADMIN_PASSWORD" ]
-then 
-    echo 'No fields can be blank, please try again' 
-    exit 0 
-fi
+while true; do
+    read -s -p 'Enter password again: ' ADMIN_PASSWORD_CONF
+    echo
+    [ "$ADMIN_PASSWORD" = "$ADMIN_PASSWORD_CONF" ] && break || echo "Passwords don't match, try again"
+done
 
-
-# Validate email address format
-EMAIL_REGEX="^(([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))\.)*([-a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~]+|(\"([][,:;<>\&@a-zA-Z0-9\!#\$%\&\'*+/=?^_\`{\|}~-]|(\\\\[\\ \"]))+\"))@\w((-|\w)*\w)*\.(\w((-|\w)*\w)*\.)*\w{2,4}$"
-if [[ $ADMIN_EMAIL =~ $EMAIL_REGEX ]]; then
-    echo 'Setting superuser info...'
-else
-    echo 'Admin email address is invalid, please try again'
-    exit 0
-fi
-
-if [[ $GIT_EMAIL =~ $EMAIL_REGEX ]]; then
-    echo 'Setting up git user info...'
-else
-    echo 'Git user email invalid, please try again'
-    exit 0
-fi
-
+# Set OS prerequisites
 LINUX_PREREQ=('git' 'build-essential' 'python3-dev' 'python3-pip' 'nginx' 'postgresql' 'libpq-dev' )
 
+# Set Python prerequisites
 PYTHON_PREREQ=('virtualenv')
 
 # Test prerequisites
@@ -182,6 +165,8 @@ EOF
 mv /tmp/$APPNAME.cfg $APPFOLDERPATH
 chown $APPNAME:$GROUPNAME $APPFOLDERPATH/$APPNAME.cfg
 
+SETTINGS_TEMPLATE=$(cat "${./deployment/templates/django_settings}")
+
 # Install requirements and create super user
 su -l $APPNAME << EOF
 # Enter virtual environment
@@ -193,6 +178,12 @@ pip install --upgrade pip || error_exist "Error upgrading pip to the latest vers
 # Install prerequisite python packages for application using pip
 echo "Installing application requirements..."
 pip install -r ./requirements.txt
+# start project
+echo "Starting Django project..."
+django-admin startproject $APPNAME .
+# Fix settings.py
+echo "Fixing settings.py..."
+python ./deployment/scripts/render.py -i deployment/templates/django_settings -o $APPNAME/settings.py -l $APPNAME
 # Setup database
 echo "Running databse migrations..."
 ./manage.py makemigrations
