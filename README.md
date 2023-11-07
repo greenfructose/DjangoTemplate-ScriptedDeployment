@@ -9,7 +9,7 @@ Currentyl supports deploying Django with PostgreSQL and nginx. Requires fresh Ub
 The project name and project folder must be the same. In ```settings.py```, configuration must be as follows:
 
 ```python
-from configparser import configparser
+from configparser import ConfigParser
 
 config = ConfigParser(converters={'list': lambda x: [i.strip() for i in x.split(',')]})
 config.read(BASE_DIR / 'project_name.cfg')
