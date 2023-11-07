@@ -19,7 +19,14 @@ read -p 'Enter git user.email: ' GIT_EMAIL
 # Get Django admin user info
 read -p 'Enter username for superuser: ' ADMIN_USER
 read -p 'Enter email for superuser: ' ADMIN_EMAIL
-read -s -p 'Enter password for superuser: ' ADMIN_PASSWORD
+while true; do
+    read -s -p 'Enter password for superuser: ' ADMIN_PASSWORD
+    echo
+    read -s -p 'Enter password again: ' ADMIN_PASSWORD_CONF
+    echo
+    [ "$ADMIN_PASSWORD" = "$ADMIN_PASSWORD_CONF" ] && break
+    echo "Passwords don't match, try again"
+done
 
 # Validate that inputs are not blank
 if [ -z "$GIT_USER" ] || [ -z "$GIT_EMAIL" ] || [ -z "$REPO_OWNER" ] || [ -z "$REPO_NAME" ] || [ -z "$ADMIN_USER" ] || [ -z "$ADMIN_EMAIL" ] || [ -z "$ADMIN_PASSWORD" ]
