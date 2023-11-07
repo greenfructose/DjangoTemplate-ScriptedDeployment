@@ -30,7 +30,7 @@ done
 while true; do
     read -s -p 'Enter password again: ' ADMIN_PASSWORD_CONF
     echo
-    [ "$ADMIN_PASSWORD" = "$ADMIN_PASSWORD_CONF" ] && break || echo "Passwords don't match, try again"
+    [ "$ADMIN_PASSWORD" == "$ADMIN_PASSWORD_CONF" ] && break || echo "Passwords don't match, try again"
 done
 
 # Set OS prerequisites
