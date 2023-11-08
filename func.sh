@@ -18,7 +18,7 @@ function check_root
 
 function check_not_root
 {
-    if [ "$EUID" -e 0 ]; then
+    if [ "$EUID" == 0 ]; then
         echo "Please run as non-root user"
         exit
     fi
