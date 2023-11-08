@@ -7,7 +7,7 @@ source ./func.sh
 check_not_root
 
 # Set OS prerequisites
-LINUX_PREREQ=('build-essential' 'python3-dev' 'python3-pip' )
+LINUX_PREREQ=('build-essential' 'python3-dev' 'python3-pip' 'python3-virtualenv')
 
 # Set Python prerequisites
 PYTHON_PREREQ=('virtualenv')
@@ -21,16 +21,6 @@ for pkg in "${LINUX_PREREQ[@]}"
         sudo apt-get -y install $pkg
         if [ $? -ne 0 ]; then
             echo "Error installing system package '$pkg'"
-            exit 1
-        fi
-    done
-
-for ppkg in "${PYTHON_PREREQ[@]}"
-    do
-        echo "Installing Python package '$ppkg'..."
-        pip3 install $ppkg
-        if [ $? -ne 0 ]; then
-            echo "Error installing python package '$ppkg'"
             exit 1
         fi
     done
@@ -53,7 +43,7 @@ done
 # Set up dev environment
 echo "Setting up virtual environment..."
 virtualenv -p python3 .
-source .bin/activate
+source ./bin/activate
 # Upgrade pip
 echo "Upgrading pip..."
 pip install --upgrade pip || error_exist "Error upgrading pip to the latest version"
