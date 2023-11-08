@@ -53,8 +53,11 @@ done
 # Set up dev environment
 echo "Setting up virtual environment..."
 virtualenv -p python3 .
-source bin/activate
-pip install -r requirements.dev.txt
+source .bin/activate
+# Upgrade pip
+echo "Upgrading pip..."
+pip install --upgrade pip || error_exist "Error upgrading pip to the latest version"
+pip install -r ./requirements.dev.txt
 django-admin startproject $PROJECT_NAME .
 ./manage.py makemigrations
 ./manage.py migrate

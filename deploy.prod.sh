@@ -168,7 +168,7 @@ echo "Upgrading pip..."
 pip install --upgrade pip || error_exist "Error upgrading pip to the latest version"
 # Install prerequisite python packages for application using pip
 echo "Installing application requirements..."
-pip install -r ./requirements.txt
+pip install -r ./requirements.prod.txt
 # start project
 echo "Starting Django project..."
 django-admin startproject $APPNAME .
